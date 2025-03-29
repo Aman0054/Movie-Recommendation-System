@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        #preferences {
+            width: 30%;
+        }
+
+        #recommendation {
+            width: 60%;
+        }
+
+        #preference-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #preference-form label {
+            margin-bottom: 5px;
+        }
+
+        #preference-form select,
+        #preference-form input[type="number"],
+        #preference-form input[type="submit"] {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #preference-form input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #preference-form input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #movie-details {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Movie Recommendation System</h1>
+    </header>
+    <main>
+        <section id="preferences">
+            <h2>Preferences</h2>
+            <form id="preference-form">
+                <label for="genre">Genre:</label>
+                <select id="genre">
+                    <option value="action">Action</option>
+                    <option value="comedy">Comedy</option>
+                    <option value="drama">Drama</option>
+                    <option value="horror">Horror</option>
+                    <option value="romance">Romance</option>
+                    <option value="thriller">Thriller</option>
+                    <option value="sci-fi">Sci-Fi</option>
+                </select>
+                <label for="year">Year:</label>
+                <input type="number" id="year" min="1900" max="2022" value="2022">
+                <label for="rating">Rating:</label>
+                <select id="rating">
+                    <option value="1">1 star</option>
+                    <option value="2">2 stars</option>
+                    <option value="3">3 stars</option>
+                                    <option value="4">4 stars</option>
+                <option value="5">5 stars</option>
+            </select>
+            <input type="submit" value="Recommend">
+        </form>
+    </section>
+    <section id="recommendation">
+        <h2>Recommendation</h2>
+        <p id="movie-recommendation">No recommendation yet.</p>
+        <div id="movie-details"></div>
+    </section>
+</main>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const preferencesForm = document.getElementById("preference-form");
+        const movieRecommendation = document.getElementById("movie-recommendation");
+        const movieDetails = document.getElementById("movie-details");
+
+        preferencesForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            const genre = document.getElementById("genre").value;
+            const year = document.getElementById("year").value;
+            const rating = document.getElementById("rating").value;
+            const recommendation = recommendMovie(genre, year, rating);
+            movieRecommendation.textContent = recommendation.title;
+            const detailsHtml = `
+                <p>Genre: ${recommendation.genre}</p>
+                <p>Year: ${recommendation.year}</p>
+                <p>Rating: ${recommendation.rating}/5</p>
+            `;
+            movieDetails.innerHTML = detailsHtml;
+        });
+
+        function recommendMovie(genre, year, rating) {
+            const movies = [
+                { title: "Movie 1", genre: "action", year: 2020, rating: 4 },
+                { title: "Movie 2", genre: "comedy", year: 2019, rating: 3 },
+                { title: "Movie 3", genre: "drama", year: 2018, rating: 5 },
+                { title: "Movie 4", genre: "horror", year: 2017, rating: 2 },
+                { title: "Movie 5", genre: "romance", year: 2016, rating: 4 },
+                { title: "Movie 6", genre: "thriller", year: 2020, rating: 5 },
+                { title: "Movie 7", genre: "sci-fi", year: 2019, rating: 4 },
+            ];
+
+            const filteredMovies = movies.filter(movie => movie.genre === genre && movie.year >= year && movie.rating >= rating);
+            if (filteredMovies.length > 0) {
+                const randomIndex = Math.floor(Math.random() * filteredMovies.length);
+                return filteredMovies[randomIndex];
+            } else {
+                return { title: "No movie found." };
+            }
+        }
+    });
+</script>
